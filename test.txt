@@ -1,0 +1,14 @@
+{{EXAMPLE_MACRO_2}} {
+    abc2 def2;
+    ghi2 jkl2;
+}
+
+{{EXAMPLE_MACRO}} {
+    abc def;
+    ghi jkl;
+    {EXAMPLE_MACRO_2}
+}
+
+123 456;
+{EXAMPLE_MACRO}
+789;

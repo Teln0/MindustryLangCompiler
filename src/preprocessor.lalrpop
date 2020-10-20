@@ -1,0 +1,25 @@
+use crate::ats::*;
+
+grammar;
+
+pub StatementPart: StatementPart = {
+    <s:r"[A-Za-z0-9_]+"> => StatementPart(s.to_string())
+}
+
+pub Statement: Statement = {
+    <s:r"\{[A-Za-z0-9_]+\}"> ";"* => Statement::MacroCall(s.split_at(s.len() - 1).0.split_at(1).1.to_string()),
+    <p: StatementPart+> ";"+ => Statement::Normal(p)
+}
+
+pub Expression: Expression = {
+    <n: r"\{\{[A-Za-z0-9_]+\}\}"> "{" <l: StatementList> "}" ";"* => Expression::MacroDefinition(n.split_at(n.len() - 2).0.split_at(2).1.to_string(), l),
+    <s: Statement> => Expression::Statement(s)
+}
+
+pub StatementList: Vec<Statement> = {
+    <s: Statement+> => s
+}
+
+pub ExpressionList: Vec<Expression> = {
+    <e: Expression+> => e
+}
